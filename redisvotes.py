@@ -39,18 +39,17 @@ def init_redis():
 def home():
     return {"Welcome to Flask and Redis using":"Python"}, status.HTTP_200_OK
 
-# view all votes by postID http://127.0.0.1:5000/votebypostid/0
-@app.route('/votebypostid/<int:id>', methods=['GET'])
-def vote_by_postid(id):
+# view all votes http://127.0.0.1:5000/api/v1/resources/votes/all
+@app.route('/api/v1/resources/votes/all', methods=['GET'])
+def all_votes():
+    listVotes = []
     for i in range(0, db2.llen("votes")):
         data = json.loads(db2.lindex("votes", i))
-        if data['postID'] == id:
-            return data, status.HTTP_200_OK
-    
-    return {"Not found the postID": f'{id}'}, status.HTTP_404_NOT_FOUND
+        listVotes.append(data)
+    return listVotes, status.HTTP_200_OK
 
-# view 1 vote by voteID http://127.0.0.1:5000/vote/0
-@app.route('/vote/<int:id>', methods=['GET'])
+# view 1 vote by voteID http://127.0.0.1:5000/api/v1/resources/votebyid/1
+@app.route('/api/v1/resources/votebyid/<int:id>', methods=['GET'])
 def vote_by_voteID(id):
     for i in range(0, db2.llen("votes")):
         data = json.loads(db2.lindex("votes", i))
@@ -59,15 +58,16 @@ def vote_by_voteID(id):
 
     return {"Not found the voteID": f'{id}'}, status.HTTP_404_NOT_FOUND
 
-# upvote a post http://127.0.0.1:5000/post/<postID>/upvote
-@app.route('/upvote/<int:id>', methods=['GET', 'POST'])
-def up_votes(id):
+# upvote a post http://127.0.0.1:5000/api/v1/resources/upvote
+@app.route('/api/v1/resources/upvote', methods=['GET', 'POST'])
+def up_votes():
     if request.method == 'GET':
-        for i in range(0, db2.llen("votes")):
-            data = json.loads(db2.lindex("votes", i))
-            if data['postID'] == id:
-                return data, status.HTTP_200_OK
-        return {"Not found the postID": f'{id}'}, status.HTTP_404_NOT_FOUND
+        return {'postID': '???'}, status.HTTP_200_OK
+    #     for i in range(0, db2.llen("votes")):
+    #         data = json.loads(db2.lindex("votes", i))
+    #         if data['postID'] == id:
+    #             return data, status.HTTP_200_OK
+    #     return {"Not found the postID": f'{id}'}, status.HTTP_404_NOT_FOUND
 
     elif request.method == 'POST':
         postID = request.data.get('postID')
@@ -80,15 +80,16 @@ def up_votes(id):
                 return data, status.HTTP_200_OK
         return {"Not found the postID": f'{postID}'}, status.HTTP_404_NOT_FOUND
 
-# downvote a post http://127.0.0.1:5000/post/<postID>/downvote
-@app.route('/downvote/<int:id>', methods=['GET', 'POST'])
-def down_votes(id):
+# downvote a post http://127.0.0.1:5000/post/api/v1/resources/downvote
+@app.route('/api/v1/resources//downvote', methods=['GET', 'POST'])
+def down_votes():
     if request.method == 'GET':
-        for i in range(0, db2.llen("votes")):
-            data = json.loads(db2.lindex("votes", i))
-            if data['postID'] == id:
-                return data, status.HTTP_200_OK
-        return {"Not found the postID": f'{id}'}, status.HTTP_404_NOT_FOUND
+        return {'postID': '???'}, status.HTTP_200_OK
+        # for i in range(0, db2.llen("votes")):
+        #     data = json.loads(db2.lindex("votes", i))
+        #     if data['postID'] == id:
+        #         return data, status.HTTP_200_OK
+        # return {"Not found the postID": f'{id}'}, status.HTTP_404_NOT_FOUND
 
     elif request.method == 'POST':
         postID = request.data.get('postID')
@@ -101,8 +102,17 @@ def down_votes(id):
                 return data, status.HTTP_200_OK
         return {"Not found the postID": f'{postID}'}, status.HTTP_404_NOT_FOUND
 
-# top n post score http://127.0.0.1:5000/toppostscore/2
-@app.route('/toppostscore/<int:topscore>', methods=['GET'])
+# Report the number of upvotes and downvotes for a port http://127.0.0.1:5000/api/v1/resources/votesbypostid/<int:id>
+@app.route('/api/v1/resources/votesbypostid/<int:id>', methods=['GET'])
+def vote_by_postid(id):
+    for i in range(0, db2.llen("votes")):
+        data = json.loads(db2.lindex("votes", i))
+        if data['postID'] == id:
+            return data, status.HTTP_200_OK
+    return {"Not found the postID": f'{id}'}, status.HTTP_404_NOT_FOUND
+
+# top n post score http://127.0.0.1:5000/api/v1/resources/toppostscore/<int:number>
+@app.route('/api/v1/resources/toppostscore/<int:topscore>', methods=['GET'])
 def top_post_score(topscore):    
     sortedList = []
 
@@ -130,16 +140,17 @@ def top_post_score(topscore):
 
     return sortedList, status.HTTP_200_OK
 
-# list sorted by score http://127.0.0.1:5000/listsortedbyscore
+# list sorted by score http://127.0.0.1:5000/api/v1/resources/listsortedbyscore
 # input json example: {"listPostID": [0, 2]}
-@app.route('/listsortedbyscore', methods=['GET', 'POST'])
+@app.route('/api/v1/resources/listsortedbyscore', methods=['GET', 'POST'])
 def list_sorted_by_score():
     if request.method == 'GET':
-        listVotes = []
-        for i in range(0, db2.llen("votes")):
-            data = json.loads(db2.lindex("votes", i))
-            listVotes.append(data)
-        return listVotes, status.HTTP_200_OK
+        return {'listPostID': '[???]'}, status.HTTP_200_OK
+        # listVotes = []
+        # for i in range(0, db2.llen("votes")):
+        #     data = json.loads(db2.lindex("votes", i))
+        #     listVotes.append(data)
+        # return listVotes, status.HTTP_200_OK
     elif request.method == 'POST':
         datarequested = request.data    # this is a json
         listID = datarequested['listPostID']    # assign to the list
@@ -173,12 +184,8 @@ def list_sorted_by_score():
 # Create raw data
 def raw_data():
     myDB = [
-        {
-            "voteID": 0, "postID": 0, "community": "home", "upvote": 2,"downvote": 0
-        },
-        {
-            "voteID": 1, "postID": 1, "community": "school", "upvote": 4, "downvote": 0
-        },
+        {"voteID": 0, "postID": 0, "community": "home", "upvote": 2,"downvote": 0},
+        {"voteID": 1, "postID": 1, "community": "school", "upvote": 4, "downvote": 0},
         {
             "voteID": 2, "postID": 2, "community": "workplace", "upvote": 10, "downvote": 1
         },
@@ -196,6 +203,54 @@ def raw_data():
         },
         {
             "voteID": 7, "postID": 7, "community": "home", "upvote": 2, "downvote": 0
+        },
+        {
+            "voteID": 8, "postID": 8, "community": "home", "upvote": 2,"downvote": 0
+        },
+        {
+            "voteID": 9, "postID": 9, "community": "school", "upvote": 4, "downvote": 0
+        },
+        {
+            "voteID": 10, "postID": 10, "community": "workplace", "upvote": 10, "downvote": 1
+        },
+        {
+            "voteID": 11, "postID": 11, "community": "home", "upvote": 2, "downvote": 0
+        },
+        {
+            "voteID": 12, "postID": 12, "community": "home", "upvote": 2,"downvote": 0
+        },
+        {
+            "voteID": 13, "postID": 13, "community": "school", "upvote": 4, "downvote": 0
+        },
+        {
+            "voteID": 14, "postID": 14, "community": "workplace", "upvote": 10, "downvote": 1
+        },
+        {
+            "voteID": 15, "postID": 15, "community": "home", "upvote": 2, "downvote": 0
+        },
+        {
+            "voteID": 16, "postID": 16, "community": "home", "upvote": 2,"downvote": 0
+        },
+        {
+            "voteID": 17, "postID": 17, "community": "school", "upvote": 4, "downvote": 0
+        },
+        {
+            "voteID": 18, "postID": 18, "community": "workplace", "upvote": 10, "downvote": 1
+        },
+        {
+            "voteID": 19, "postID": 19, "community": "home", "upvote": 2, "downvote": 0
+        },
+        {
+            "voteID": 20, "postID": 20, "community": "home", "upvote": 2,"downvote": 0
+        },
+        {
+            "voteID": 21, "postID": 21, "community": "school", "upvote": 4, "downvote": 0
+        },
+        {
+            "voteID": 22, "postID": 22, "community": "workplace", "upvote": 10, "downvote": 1
+        },
+        {
+            "voteID": 23, "postID": 23, "community": "home", "upvote": 2, "downvote": 0
         }
     ]
 
