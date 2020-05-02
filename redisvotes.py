@@ -51,7 +51,7 @@ def vote_by_postid(id):
 
 # view 1 vote by voteID http://127.0.0.1:5000/vote/0
 @app.route('/vote/<int:id>', methods=['GET'])
-def vote(id):
+def vote_by_voteID(id):
     for i in range(0, db2.llen("votes")):
         data = json.loads(db2.lindex("votes", i))
         if data['voteID'] == id:
@@ -135,10 +135,14 @@ def top_post_score(topscore):
 @app.route('/listsortedbyscore', methods=['GET', 'POST'])
 def list_sorted_by_score():
     if request.method == 'GET':
-        return list(db2.lrange("votes", 0, -1)), status.HTTP_200_OK
+        listVotes = []
+        for i in range(0, db2.llen("votes")):
+            data = json.loads(db2.lindex("votes", i))
+            listVotes.append(data)
+        return listVotes, status.HTTP_200_OK
     elif request.method == 'POST':
         datarequested = request.data    # this is a json
-        listID = datarequested['listID']    # assign to the list
+        listID = datarequested['listPostID']    # assign to the list
         print('List input: ' + f'{listID}')
         sortedList = []
         if len(listID) > db2.llen("votes"):
@@ -170,25 +174,28 @@ def list_sorted_by_score():
 def raw_data():
     myDB = [
         {
-            "voteID": 0,
-            "postID": 0,
-            "community": "home",
-            "upvote": 2,
-            "downvote": 0
+            "voteID": 0, "postID": 0, "community": "home", "upvote": 2,"downvote": 0
         },
         {
-            "voteID": 1,
-            "postID": 1,
-            "community": "school",
-            "upvote": 4,
-            "downvote": 0
+            "voteID": 1, "postID": 1, "community": "school", "upvote": 4, "downvote": 0
         },
         {
-            "voteID": 2,
-            "postID": 2,
-            "community": "workplace",
-            "upvote": 10,
-            "downvote": 1
+            "voteID": 2, "postID": 2, "community": "workplace", "upvote": 10, "downvote": 1
+        },
+        {
+            "voteID": 3, "postID": 3, "community": "home", "upvote": 2, "downvote": 0
+        },
+        {
+            "voteID": 4, "postID": 4, "community": "home", "upvote": 2,"downvote": 0
+        },
+        {
+            "voteID": 5, "postID": 5, "community": "school", "upvote": 4, "downvote": 0
+        },
+        {
+            "voteID": 6, "postID": 6, "community": "workplace", "upvote": 10, "downvote": 1
+        },
+        {
+            "voteID": 7, "postID": 7, "community": "home", "upvote": 2, "downvote": 0
         }
     ]
 
