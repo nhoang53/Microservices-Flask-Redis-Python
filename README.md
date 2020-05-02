@@ -84,17 +84,18 @@ http://localhost:5200/hot
 
 ### Voting microservices part:
 ```sh
-•	View all votes by postID: http://127.0.0.1:5000/votebypostid/<postID>
-•	View all post: http://127.0.0.1:5000/
-•	View 1 votes by vote id: http://127.0.0.1:5000/vote/<voteID>
-•	Upvote a post: http://127.0.0.1:5000/post/<postID>/upvote
-Have to input in json format. 
-Example: {“postID”: 0}
-•	Downvote a post: http://127.0.0.1:5000/post/<postID>/downvote
-Have to input in json format. 
-Example: {“postID”: 0}
-•	List the n top-scoring posts to any community: http://127.0.0.1:5000/toppostscore/2
-•	Given a list of post identifiers, return the list sorted by score: http://127.0.0.1:5000/listsortedbyscore
-Have to input a list: Example: [0, 2]
+View all votes by postID: http://127.0.0.1:5000/votebypostid/<postID>
+View all post: http://127.0.0.1:5000/
+View 1 votes by vote id: http://127.0.0.1:5000/vote/<voteID>
+Upvote a post: http://127.0.0.1:5000/post/<postID>/upvote
+	Have to input in json format. 
+	Example: {“postID”: 0}
+Downvote a post: http://127.0.0.1:5000/post/<postID>/downvote
+	Have to input in json format. 
+	Example: {“postID”: 0}
+List the n top-scoring posts to any community: http://127.0.0.1:5000/toppostscore/2
+Given a list of post identifiers, return the list sorted by score:
+	http://127.0.0.1:5000/listsortedbyscore
+	Have to input a list: Example: [0, 2]
 
 ```
